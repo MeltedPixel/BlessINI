@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -1126,7 +1127,6 @@ public class Main extends javax.swing.JFrame {
     }
     
     public static void setVariableDesign(int lineNumber, String data) throws IOException {
-        /*
         iReadini = new Ini();
         try {
             iReadini.load(new FileReader(sWorkingPath + "/" + sIniFileName));
@@ -1138,8 +1138,9 @@ public class Main extends javax.swing.JFrame {
         String baseDesignLoc = pathLocation.substring(0, pathLocation.length() - 24);
         baseDesignLoc = baseDesignLoc + "BLGame\\Config\\BLDesign.ini";
 
+        Path designPath = Paths.get(baseDesignLoc);
         byte[] buf = new byte[4096];
-        InputStream fis = newInputStream(java.nio.file.Paths.get(baseDesignLoc));
+        InputStream fis = Files.newInputStream(designPath);
 
         UniversalDetector detector = new UniversalDetector();
         int nread;
@@ -1180,7 +1181,6 @@ public class Main extends javax.swing.JFrame {
         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
         lines.set(lineNumber - 1, data);
         Files.write(path, lines, StandardCharsets.UTF_8);
-        */
     }
     
     /**
