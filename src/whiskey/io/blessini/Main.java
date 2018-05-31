@@ -1,9 +1,8 @@
 /*
-* This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 
-* International License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ 
-* or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
- 
 package whiskey.io.blessini;
 
 import java.awt.Color;
@@ -19,18 +18,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.commons.io.FileUtils;
 import org.ini4j.Config;
 import org.ini4j.Ini;
 import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Wini;
+import org.mozilla.universalchardet.UniversalDetector;
 
 /**
  *
@@ -46,6 +45,7 @@ public class Main extends javax.swing.JFrame {
     public static Ini iBaseEngine;
     public static Ini iBaseInput;
     public static Ini iBaseSystem;
+    public static Ini iBaseDesign;
     public static Boolean fovFix;
     public static Boolean mouseSmooth;
     public static Boolean lookupFix;
@@ -80,11 +80,11 @@ public class Main extends javax.swing.JFrame {
         directoryAnchor = new javax.swing.JTextField();
         btn_set = new javax.swing.JButton();
         txt_notice0 = new javax.swing.JLabel();
+        txt_notice2 = new javax.swing.JLabel();
         txt_notice1 = new javax.swing.JLabel();
         title_frameRate = new javax.swing.JLabel();
         txt_frameRate = new javax.swing.JLabel();
         fld_frameRate = new javax.swing.JTextField();
-        txt_or = new javax.swing.JLabel();
         txt_minSmoothedFrame = new javax.swing.JLabel();
         fld_minSmoothedFrame = new javax.swing.JTextField();
         txt_maxSmoothedFrame = new javax.swing.JLabel();
@@ -113,11 +113,24 @@ public class Main extends javax.swing.JFrame {
         fld_fogVolumes = new javax.swing.JTextField();
         txt_staticDecalsBase = new javax.swing.JLabel();
         fld_staticDecalsBase = new javax.swing.JTextField();
-        btn_fov = new javax.swing.JButton();
-        btn_mouseSmooth = new javax.swing.JButton();
-        btn_vertMouseFix = new javax.swing.JButton();
+        txt_allowFrameSleep = new javax.swing.JLabel();
+        fld_allowFrameSleep = new javax.swing.JTextField();
+        txt_allowFrameYield = new javax.swing.JLabel();
+        fld_allowFrameYield = new javax.swing.JTextField();
+        title_fov = new javax.swing.JLabel();
+        txt_normalFOV = new javax.swing.JLabel();
+        fld_normalFOV = new javax.swing.JTextField();
+        txt_sprintFOV = new javax.swing.JLabel();
+        fld_sprintFOV = new javax.swing.JTextField();
+        txt_mountFOV = new javax.swing.JLabel();
+        fld_mountFOV = new javax.swing.JTextField();
+        title_inputMisc = new javax.swing.JLabel();
+        btn_fov = new javax.swing.JCheckBox();
+        btn_vertMouseFix = new javax.swing.JCheckBox();
+        btn_mouseSmooth = new javax.swing.JCheckBox();
         btn_restore = new javax.swing.JButton();
         btn_save = new javax.swing.JButton();
+        txt_version = new javax.swing.JLabel();
         body_background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -162,10 +175,15 @@ public class Main extends javax.swing.JFrame {
         });
         getContentPane().add(btn_set, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 470, -1, 20));
 
-        txt_notice0.setForeground(new java.awt.Color(255, 255, 255));
+        txt_notice0.setForeground(new java.awt.Color(255, 153, 51));
         txt_notice0.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txt_notice0.setText("NOTCE: Changes to your INI are unofficial. All changes are found by community members like you!");
-        getContentPane().add(txt_notice0, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, 530, -1));
+        txt_notice0.setText("TIP: Hover over nameplates for a quick description and recommended settings");
+        getContentPane().add(txt_notice0, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 58, 530, -1));
+
+        txt_notice2.setForeground(new java.awt.Color(255, 255, 255));
+        txt_notice2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txt_notice2.setText("NOTCE: Changes to your INI are unofficial. All changes are found by community members like you!");
+        getContentPane().add(txt_notice2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, 530, -1));
 
         txt_notice1.setForeground(new java.awt.Color(255, 255, 102));
         txt_notice1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -181,182 +199,239 @@ public class Main extends javax.swing.JFrame {
             txt_frameRate.setForeground(new java.awt.Color(255, 255, 255));
             txt_frameRate.setText("bSmoothFrameRate =");
             txt_frameRate.setToolTipText("Turn off the 62 FPS framecap. Recommended = False");
-            getContentPane().add(txt_frameRate, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, -1, -1));
+            getContentPane().add(txt_frameRate, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, -1, -1));
 
             fld_frameRate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_frameRate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_frameRate, new org.netbeans.lib.awtextra.AbsoluteConstraints(168, 118, 60, -1));
-
-            txt_or.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-            txt_or.setForeground(new java.awt.Color(255, 255, 255));
-            txt_or.setText("OR");
-            getContentPane().add(txt_or, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 120, -1, -1));
+            getContentPane().add(fld_frameRate, new org.netbeans.lib.awtextra.AbsoluteConstraints(147, 118, 60, -1));
 
             txt_minSmoothedFrame.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_minSmoothedFrame.setForeground(new java.awt.Color(255, 255, 255));
             txt_minSmoothedFrame.setText("MinSmoothedFrameRate =");
             txt_minSmoothedFrame.setToolTipText("If bSmoothFrameRate = True. Set Min/Max as needed");
-            getContentPane().add(txt_minSmoothedFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 120, -1, -1));
+            getContentPane().add(txt_minSmoothedFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, -1, -1));
 
             fld_minSmoothedFrame.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_minSmoothedFrame.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_minSmoothedFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(425, 118, 60, -1));
+            getContentPane().add(fld_minSmoothedFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(174, 148, 60, -1));
 
             txt_maxSmoothedFrame.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_maxSmoothedFrame.setForeground(new java.awt.Color(255, 255, 255));
             txt_maxSmoothedFrame.setText("MaxSmoothedFrameRate =");
             txt_maxSmoothedFrame.setToolTipText("If bSmoothFrameRate = True. Set Min/Max as needed");
-            getContentPane().add(txt_maxSmoothedFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 120, -1, -1));
+            getContentPane().add(txt_maxSmoothedFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, -1, -1));
 
             fld_maxSmoothedFrame.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_maxSmoothedFrame.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_maxSmoothedFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(644, 118, 60, -1));
+            getContentPane().add(fld_maxSmoothedFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(175, 178, 60, -1));
 
             title_general.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
             title_general.setForeground(new java.awt.Color(255, 255, 255));
             title_general.setText("General Performance Improvements");
-            getContentPane().add(title_general, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, -1, -1));
+            getContentPane().add(title_general, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 90, -1, -1));
 
             txt_staticDecals.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_staticDecals.setForeground(new java.awt.Color(255, 255, 255));
             txt_staticDecals.setText("bStaticDecalsEnabled =");
             txt_staticDecals.setToolTipText("Recommended = False");
-            getContentPane().add(txt_staticDecals, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 200, -1, -1));
+            getContentPane().add(txt_staticDecals, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 120, -1, -1));
 
             fld_staticDecals.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_staticDecals.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_staticDecals, new org.netbeans.lib.awtextra.AbsoluteConstraints(178, 198, 60, -1));
+            getContentPane().add(fld_staticDecals, new org.netbeans.lib.awtextra.AbsoluteConstraints(428, 118, 60, -1));
 
             txt_dynamicDecals.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_dynamicDecals.setForeground(new java.awt.Color(255, 255, 255));
             txt_dynamicDecals.setText("bDynamicDecalsEnabled =");
             txt_dynamicDecals.setToolTipText("Recommended = False");
-            getContentPane().add(txt_dynamicDecals, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 230, -1, -1));
+            getContentPane().add(txt_dynamicDecals, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 150, -1, -1));
 
             fld_dynamicDecals.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_dynamicDecals.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_dynamicDecals, new org.netbeans.lib.awtextra.AbsoluteConstraints(198, 227, 60, -1));
+            getContentPane().add(fld_dynamicDecals, new org.netbeans.lib.awtextra.AbsoluteConstraints(444, 148, 60, -1));
 
             txt_disablePhysX.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_disablePhysX.setForeground(new java.awt.Color(255, 255, 255));
             txt_disablePhysX.setText("bDisablePhysXHardwareSupport =");
             txt_disablePhysX.setToolTipText("Recommended = False");
-            getContentPane().add(txt_disablePhysX, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 260, -1, -1));
+            getContentPane().add(txt_disablePhysX, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 180, -1, -1));
 
             fld_disablePhysX.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_disablePhysX.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_disablePhysX, new org.netbeans.lib.awtextra.AbsoluteConstraints(238, 257, 60, -1));
+            getContentPane().add(fld_disablePhysX, new org.netbeans.lib.awtextra.AbsoluteConstraints(486, 178, 60, -1));
 
             txt_poolSize.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_poolSize.setForeground(new java.awt.Color(255, 255, 255));
             txt_poolSize.setText("PoolSize =");
             txt_poolSize.setToolTipText("Based on your GPU Memory: 512, 1024, 2048, 4096 (Don't go higher then 4gb)");
-            getContentPane().add(txt_poolSize, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 290, -1, -1));
+            getContentPane().add(txt_poolSize, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 210, -1, -1));
 
             fld_poolSize.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_poolSize.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_poolSize, new org.netbeans.lib.awtextra.AbsoluteConstraints(104, 288, 60, -1));
+            getContentPane().add(fld_poolSize, new org.netbeans.lib.awtextra.AbsoluteConstraints(354, 208, 60, -1));
 
             txt_memoryMargin.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_memoryMargin.setForeground(new java.awt.Color(255, 255, 255));
             txt_memoryMargin.setText("MemoryMargin =");
             txt_memoryMargin.setToolTipText("Recommended = 256");
-            getContentPane().add(txt_memoryMargin, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 320, -1, -1));
+            getContentPane().add(txt_memoryMargin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 240, -1, -1));
 
             fld_memoryMargin.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_memoryMargin.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_memoryMargin, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 318, 60, -1));
+            getContentPane().add(fld_memoryMargin, new org.netbeans.lib.awtextra.AbsoluteConstraints(384, 238, 60, -1));
 
             txt_threadedShader.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_threadedShader.setForeground(new java.awt.Color(255, 255, 255));
             txt_threadedShader.setText("ThreadedShaderCompileThreshold =");
             txt_threadedShader.setToolTipText("Based on the number of physical CPU cores, not threads your computer has");
-            getContentPane().add(txt_threadedShader, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 350, -1, -1));
+            getContentPane().add(txt_threadedShader, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 270, -1, -1));
 
             fld_threadedShader.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_threadedShader.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_threadedShader, new org.netbeans.lib.awtextra.AbsoluteConstraints(252, 348, 60, -1));
+            getContentPane().add(fld_threadedShader, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 268, 60, -1));
 
             title_optional.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
             title_optional.setForeground(new java.awt.Color(255, 255, 255));
             title_optional.setText("Optional Performance Boosts");
-            getContentPane().add(title_optional, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 160, 260, 20));
+            getContentPane().add(title_optional, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 90, 260, 20));
 
             txt_motionBlur.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_motionBlur.setForeground(new java.awt.Color(255, 255, 255));
             txt_motionBlur.setText("MotionBlur = ");
             txt_motionBlur.setToolTipText("Its motionblur! Who likes it anyway! Recommended = False");
-            getContentPane().add(txt_motionBlur, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 200, -1, -1));
+            getContentPane().add(txt_motionBlur, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 130, -1, -1));
 
             fld_motionBlur.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_motionBlur.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_motionBlur, new org.netbeans.lib.awtextra.AbsoluteConstraints(544, 197, 60, -1));
+            getContentPane().add(fld_motionBlur, new org.netbeans.lib.awtextra.AbsoluteConstraints(673, 128, 60, -1));
 
             txt_distortion.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_distortion.setForeground(new java.awt.Color(255, 255, 255));
             txt_distortion.setText("Distortion = ");
             txt_distortion.setToolTipText("Disables distortion visual effect. Recommended = False");
-            getContentPane().add(txt_distortion, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 230, -1, -1));
+            getContentPane().add(txt_distortion, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 160, -1, -1));
 
             fld_distortion.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_distortion.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_distortion, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 228, 60, -1));
+            getContentPane().add(fld_distortion, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 158, 60, -1));
 
             txt_lightEnv.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_lightEnv.setForeground(new java.awt.Color(255, 255, 255));
             txt_lightEnv.setText("LightEnvironmentShadows = ");
             txt_lightEnv.setToolTipText("Disables Costly Enviromental light shadows. Recommended = False");
-            getContentPane().add(txt_lightEnv, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 260, -1, -1));
+            getContentPane().add(txt_lightEnv, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 190, -1, -1));
 
             fld_lightEnv.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_lightEnv.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_lightEnv, new org.netbeans.lib.awtextra.AbsoluteConstraints(634, 257, 60, -1));
+            getContentPane().add(fld_lightEnv, new org.netbeans.lib.awtextra.AbsoluteConstraints(763, 188, 60, -1));
 
             txt_fogVolumes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_fogVolumes.setForeground(new java.awt.Color(255, 255, 255));
             txt_fogVolumes.setText("FogVolumes = ");
             txt_fogVolumes.setToolTipText("Disables Foggy areas you come across in caves. Recommended = False");
-            getContentPane().add(txt_fogVolumes, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 290, -1, -1));
+            getContentPane().add(txt_fogVolumes, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 220, -1, -1));
 
             fld_fogVolumes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_fogVolumes.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_fogVolumes, new org.netbeans.lib.awtextra.AbsoluteConstraints(555, 288, 60, -1));
+            getContentPane().add(fld_fogVolumes, new org.netbeans.lib.awtextra.AbsoluteConstraints(684, 218, 60, -1));
 
             txt_staticDecalsBase.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_staticDecalsBase.setForeground(new java.awt.Color(255, 255, 255));
             txt_staticDecalsBase.setText("StaticDecals = ");
             txt_staticDecalsBase.setToolTipText("Disables grime on top of textures. Can also make them look like poop though. Recommended = Either Way");
-            getContentPane().add(txt_staticDecalsBase, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 320, -1, -1));
+            getContentPane().add(txt_staticDecalsBase, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 250, -1, -1));
 
             fld_staticDecalsBase.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_staticDecalsBase.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_staticDecalsBase, new org.netbeans.lib.awtextra.AbsoluteConstraints(554, 317, 60, -1));
+            getContentPane().add(fld_staticDecalsBase, new org.netbeans.lib.awtextra.AbsoluteConstraints(684, 248, 60, -1));
 
-            btn_fov.setText("FOV & Ultrawide Fix");
+            txt_allowFrameSleep.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+            txt_allowFrameSleep.setForeground(new java.awt.Color(255, 255, 255));
+            txt_allowFrameSleep.setText("AllowPerFrameSleep = ");
+            txt_allowFrameSleep.setToolTipText("recommended = false");
+            getContentPane().add(txt_allowFrameSleep, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 280, -1, -1));
+
+            fld_allowFrameSleep.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+            fld_allowFrameSleep.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+            getContentPane().add(fld_allowFrameSleep, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 278, 60, -1));
+
+            txt_allowFrameYield.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+            txt_allowFrameYield.setForeground(new java.awt.Color(255, 255, 255));
+            txt_allowFrameYield.setText("AllowPerFrameYield = ");
+            txt_allowFrameYield.setToolTipText("Recommended = false");
+            getContentPane().add(txt_allowFrameYield, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 310, -1, -1));
+
+            fld_allowFrameYield.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+            fld_allowFrameYield.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+            getContentPane().add(fld_allowFrameYield, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 308, 60, -1));
+
+            title_fov.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+            title_fov.setForeground(new java.awt.Color(255, 255, 255));
+            title_fov.setText("FOV Settings ----------------------------------------------------------------------------");
+            getContentPane().add(title_fov, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 340, 500, 20));
+
+            txt_normalFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+            txt_normalFOV.setForeground(new java.awt.Color(255, 255, 255));
+            txt_normalFOV.setText("NormalFov =");
+            txt_normalFOV.setToolTipText("Recommended = 256");
+            getContentPane().add(txt_normalFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 370, -1, -1));
+
+            fld_normalFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+            fld_normalFOV.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+            getContentPane().add(fld_normalFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(296, 368, 60, -1));
+
+            txt_sprintFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+            txt_sprintFOV.setForeground(new java.awt.Color(255, 255, 255));
+            txt_sprintFOV.setText("SprintFov =");
+            txt_sprintFOV.setToolTipText("Recommended = 256");
+            getContentPane().add(txt_sprintFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 370, -1, -1));
+            txt_sprintFOV.getAccessibleContext().setAccessibleName("SprintFov =");
+
+            fld_sprintFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+            fld_sprintFOV.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+            getContentPane().add(fld_sprintFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(448, 368, 60, -1));
+
+            txt_mountFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+            txt_mountFOV.setForeground(new java.awt.Color(255, 255, 255));
+            txt_mountFOV.setText("Mount_MoveFov =");
+            txt_mountFOV.setToolTipText("Recommended = 256");
+            getContentPane().add(txt_mountFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 370, -1, -1));
+
+            fld_mountFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+            fld_mountFOV.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+            getContentPane().add(fld_mountFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(634, 368, 60, -1));
+
+            title_inputMisc.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+            title_inputMisc.setForeground(new java.awt.Color(255, 255, 255));
+            title_inputMisc.setText("Input / Misc Fix's");
+            getContentPane().add(title_inputMisc, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, 110, 20));
+
+            btn_fov.setText("  FOV & Ultrawide Fix");
+            btn_fov.setToolTipText("Fixes FOV and Ultrawide Fix");
             btn_fov.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     btn_fovActionPerformed(evt);
                 }
             });
-            getContentPane().add(btn_fov, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 370, -1, -1));
+            getContentPane().add(btn_fov, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 130, -1));
 
-            btn_mouseSmooth.setText("Mouse Smoothing");
+            btn_vertMouseFix.setText("  Vertical Mouse Fix");
+            btn_vertMouseFix.setToolTipText("Fixes vertical mouse not matching with horizontal constraints");
+            btn_vertMouseFix.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    btn_vertMouseFixActionPerformed(evt);
+                }
+            });
+            getContentPane().add(btn_vertMouseFix, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 130, -1));
+
+            btn_mouseSmooth.setText("  Mouse Smoothing");
             btn_mouseSmooth.setToolTipText("Turn on/off Mouse Smoothing");
             btn_mouseSmooth.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     btn_mouseSmoothActionPerformed(evt);
                 }
             });
-            getContentPane().add(btn_mouseSmooth, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 370, -1, -1));
-
-            btn_vertMouseFix.setText("Vertical Mouse Fix");
-            btn_vertMouseFix.setToolTipText("Fix for mouse vertical movement not being the same as horizontal");
-            btn_vertMouseFix.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    btn_vertMouseFixActionPerformed(evt);
-                }
-            });
-            getContentPane().add(btn_vertMouseFix, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 370, -1, -1));
+            getContentPane().add(btn_mouseSmooth, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, 130, -1));
 
             btn_restore.setText("Restore Defaults");
             btn_restore.addActionListener(new java.awt.event.ActionListener() {
@@ -373,6 +448,11 @@ public class Main extends javax.swing.JFrame {
                 }
             });
             getContentPane().add(btn_save, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 420, 110, -1));
+
+            txt_version.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+            txt_version.setForeground(new java.awt.Color(255, 255, 255));
+            txt_version.setText("Ver. 1.1.0");
+            getContentPane().add(txt_version, new org.netbeans.lib.awtextra.AbsoluteConstraints(836, 388, -1, -1));
 
             body_background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/whiskey/io/blessini/images/background.png"))); // NOI18N
             getContentPane().add(body_background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 500));
@@ -450,6 +530,10 @@ public class Main extends javax.swing.JFrame {
         
         String baseSystemLoc = pathLocation.substring(0, pathLocation.length() - 24);
         baseSystemLoc = baseSystemLoc + "Engine\\Config\\BaseSystemSettings.ini";
+        
+        String baseDesignLoc = pathLocation.substring(0, pathLocation.length() - 24);
+        baseDesignLoc = baseDesignLoc + "BLGame\\Config\\BLDesign.ini";
+        
         // Debug Statement
         if (isDebugRunning) {
             System.out.println("Debug: " + "BaseEngine Path = " + pathLocation);
@@ -626,6 +710,74 @@ public class Main extends javax.swing.JFrame {
                     System.out.println("Debug: " + "StaticDecals = " + sStaticDecals);
                 }
                 fld_staticDecalsBase.setText(sStaticDecals);
+                
+                // AllowPerFrameSleep
+                String sAllowFrameSleep = iBaseSystem.get("SystemSettings", "AllowPerFrameSleep", String.class);
+                // Debug Statement
+                if (isDebugRunning) {
+                    System.out.println("Debug: " + "AllowPerFrameSleep = " + sAllowFrameSleep);
+                }
+                fld_allowFrameSleep.setText(sAllowFrameSleep);
+                
+                // AllowPerFrameYield
+                String sAllowFrameYield = iBaseSystem.get("SystemSettings", "AllowPerFrameYield", String.class);
+                // Debug Statement
+                if (isDebugRunning) {
+                    System.out.println("Debug: " + "AllowPerFrameYield = " + sAllowFrameYield);
+                }
+                fld_allowFrameYield.setText(sAllowFrameYield);
+                
+                iBaseDesign = new Wini();
+                Config designConfig = new Config();
+                sysConfig.setMultiOption(true);
+                sysConfig.setMultiSection(true);
+                iBaseDesign.setConfig(designConfig);
+                try {
+                    iBaseSystem = new Wini(new File(baseDesignLoc));
+                } catch (FileNotFoundException ex) {
+                    // Debug Statement
+                    if (isDebugRunning) {
+                        System.out.println("Debug: " + "iBaseDesign ini not found");
+                    }
+                } catch (InvalidFileFormatException ex) {
+                    // Debug Statement
+                    if (isDebugRunning) {
+                        System.out.println("Debug: " + "iBaseDesign Not Correct Format");
+                    }
+                } catch (IOException ex) {
+                    if (isDebugRunning) {
+                        System.out.println("Debug: " + "General Error");
+                    }
+                }
+                // NormalFov
+                String sNormalFov = iBaseSystem.get("BLGame.BLCamera", "NormalFOV", String.class);
+                // Debug Statement
+                if (isDebugRunning) {
+                    System.out.println("Debug: " + "NormalFov = " + sNormalFov);
+                }
+                
+                sNormalFov = sNormalFov.replaceAll("[^0-9]","");
+                fld_normalFOV.setText(sNormalFov);
+                
+                // SprintFov
+                String sSprintFov = iBaseSystem.get("BLGame.BLCamera", "SprintFOV", String.class);
+                // Debug Statement
+                if (isDebugRunning) {
+                    System.out.println("Debug: " + "SprintFov = " + sSprintFov);
+                }
+                
+                sSprintFov = sSprintFov.replaceAll("[^0-9]","");
+                fld_sprintFOV.setText(sSprintFov);
+                
+                // Mount_MoveFov
+                String sMountFov = iBaseSystem.get("BLGame.BLCamera", "Mount_MoveFOV", String.class);
+                // Debug Statement
+                if (isDebugRunning) {
+                    System.out.println("Debug: " + "Mount_MoveFov = " + sMountFov);
+                }
+                
+                sMountFov = sMountFov.replaceAll("[^0-9]","");
+                fld_mountFOV.setText(sMountFov);
             
         } else {
             // Debug Statement
@@ -708,6 +860,23 @@ public class Main extends javax.swing.JFrame {
                 setVariableSystem(3, "StaticDecals=" + fld_staticDecalsBase.getText());
                 setVariableSystem(313, "StaticDecals=" + fld_staticDecalsBase.getText());
                 
+                // AllowPerFrameSleep
+                setVariableSystem(109, "AllowPerFrameSleep=" + fld_allowFrameSleep.getText());
+                
+                // AllowPerFrameYield
+                setVariableSystem(111, "AllowPerFrameYield=" + fld_allowFrameYield.getText());
+                
+                
+                // NormalFOV
+                setVariableDesign(86, "NormalFOV=" + fld_normalFOV.getText());
+                
+                // SprintFOV
+                setVariableDesign(87, "SprintFOV=" + fld_sprintFOV.getText());
+                
+                // Mount_MoveFOV
+                setVariableDesign(97, "Mount_MoveFOV=" + fld_mountFOV.getText());
+                
+                
             } catch (IOException ex) {
                 // Debug Statement
                 if (isDebugRunning) {
@@ -727,23 +896,124 @@ public class Main extends javax.swing.JFrame {
         if (isDebugRunning) {
             System.out.println("Debug: " + "Defaults Restored");
         }
-        fld_disablePhysX.setText("TRUE");
-        fld_dynamicDecals.setText("TRUE");
-        fld_frameRate.setText("TRUE");
+        fld_disablePhysX.setText("true");
+        fld_dynamicDecals.setText("true");
+        fld_frameRate.setText("true");
         fld_maxSmoothedFrame.setText("62");
         fld_memoryMargin.setText("20");
         fld_minSmoothedFrame.setText("22");
         fld_poolSize.setText("160");
-        fld_staticDecals.setText("TRUE");
+        fld_staticDecals.setText("true");
         fld_threadedShader.setText("1");
-        fld_motionBlur.setText("True");
-        fld_distortion.setText("True");
+        fld_motionBlur.setText("true");
+        fld_distortion.setText("true");
         fld_lightEnv.setText("True");
-        fld_fogVolumes.setText("True");
-        fld_staticDecalsBase.setText("True");
+        fld_fogVolumes.setText("true");
+        fld_staticDecalsBase.setText("true");
+        fld_allowFrameSleep.setText("true");
+        fld_allowFrameYield.setText("true");
     
         JOptionPane.showMessageDialog(null, "Defaults restored, don't forget to save.");
     }//GEN-LAST:event_btn_restoreActionPerformed
+
+    private void btn_vertMouseFixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_vertMouseFixActionPerformed
+        iReadini = new Ini();
+        try {
+            iReadini.load(new FileReader(sWorkingPath + "/" + sIniFileName));
+        } catch (IOException ex) {
+            
+        }
+        
+        Boolean pathSetState = iReadini.get("general", "pathset", Boolean.class);
+        String pathLocation = iReadini.get("general", "path", String.class);
+        
+        String baseInputLoc = pathLocation.substring(0, pathLocation.length() - 24);
+        baseInputLoc = baseInputLoc + "Engine\\Config\\BaseInput.ini";
+        
+        if (pathSetState) {
+            lookupFix = iReadini.get("general", "lookupscalefix", Boolean.class);
+
+            if (!lookupFix) {
+                try {
+                    setVariableInput(5, "LookUpScale=-300");
+                } catch (IOException ex) {
+                    
+                }
+                
+                btn_vertMouseFix.setSelected(true);
+                lookupFix = true;
+                JOptionPane.showMessageDialog(null, "Mouse vertical movement fix = Enabled");
+
+            } else {
+                try {
+                    setVariableInput(5, "LookUpScale=-250");
+                } catch (IOException ex) {
+                    
+                }
+                
+                btn_vertMouseFix.setSelected(false);
+                lookupFix = false;
+                JOptionPane.showMessageDialog(null, "Mouse vertical movement fix = Disabled");
+            }
+
+            Main.iReadini.put("general", "lookupscalefix", lookupFix);
+            try {
+                Main.iReadini.store( new FileOutputStream(sWorkingPath + "/" + sIniFileName));
+            } catch (IOException ex) {
+
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Game exe currently not set or file is not set to read/write");
+        }
+    }//GEN-LAST:event_btn_vertMouseFixActionPerformed
+
+    private void btn_mouseSmoothActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mouseSmoothActionPerformed
+        iReadini = new Ini();
+        try {
+            iReadini.load(new FileReader(sWorkingPath + "/" + sIniFileName));
+        } catch (IOException ex) {
+            
+        }
+        
+        Boolean pathSetState = iReadini.get("general", "pathset", Boolean.class);
+        String pathLocation = iReadini.get("general", "path", String.class);
+        
+        String baseInputLoc = pathLocation.substring(0, pathLocation.length() - 24);
+        baseInputLoc = baseInputLoc + "Engine\\Config\\BaseInput.ini";
+        
+        if (pathSetState) {
+            mouseSmooth = iReadini.get("general", "mousesmoothing", Boolean.class);
+
+            if (mouseSmooth) {
+                try {
+                    setVariableInput(8, "bEnableMouseSmoothing=false");
+                } catch (IOException ex) {
+                    
+                }
+                btn_mouseSmooth.setSelected(false);
+                mouseSmooth = false;
+                JOptionPane.showMessageDialog(null, "Mouse Smoothing = Disabled");
+            } else {
+                try {
+                    setVariableInput(8, "bEnableMouseSmoothing=true");
+                } catch (IOException ex) {
+                    
+                }
+                btn_mouseSmooth.setSelected(true);
+                mouseSmooth = true;
+                JOptionPane.showMessageDialog(null, "Mouse Smoothing = Enabled");
+            }
+
+            Main.iReadini.put("general", "mousesmoothing", mouseSmooth);
+            try {
+                Main.iReadini.store( new FileOutputStream(sWorkingPath + "/" + sIniFileName));
+            } catch (IOException ex) {
+
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Game exe currently not set or file is not set to read/write");
+        }
+    }//GEN-LAST:event_btn_mouseSmoothActionPerformed
 
     private void btn_fovActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_fovActionPerformed
         // Debug Statement
@@ -774,18 +1044,18 @@ public class Main extends javax.swing.JFrame {
                 } catch (IOException ex) {
                     
                 }
-
-                JOptionPane.showMessageDialog(null, "FOV & Ultrawide Fix = Enabled");
                 fovFix = true;
+                btn_fov.setSelected(true);
+                JOptionPane.showMessageDialog(null, "FOV & Ultrawide Fix = Enabled");
             } else {
                 try {
                     setVariableEngine(890, "AspectRatioAxisConstraint=AspectRatio_MaintainXFOV");
                 } catch (IOException ex) {
                     
                 }
-
-                JOptionPane.showMessageDialog(null, "FOV & Ultrawide Fix = Disabled");
+                btn_fov.setSelected(false);
                 fovFix = false;
+                JOptionPane.showMessageDialog(null, "FOV & Ultrawide Fix = Disabled");
             }
 
             Main.iReadini.put("general", "fovfix", fovFix);
@@ -798,102 +1068,6 @@ public class Main extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Game exe currently not set or file is not set to read/write");
         }
     }//GEN-LAST:event_btn_fovActionPerformed
-
-    private void btn_mouseSmoothActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mouseSmoothActionPerformed
-        iReadini = new Ini();
-        try {
-            iReadini.load(new FileReader(sWorkingPath + "/" + sIniFileName));
-        } catch (IOException ex) {
-            
-        }
-        
-        Boolean pathSetState = iReadini.get("general", "pathset", Boolean.class);
-        String pathLocation = iReadini.get("general", "path", String.class);
-        
-        String baseInputLoc = pathLocation.substring(0, pathLocation.length() - 24);
-        baseInputLoc = baseInputLoc + "Engine\\Config\\BaseInput.ini";
-        
-        if (pathSetState) {
-            mouseSmooth = iReadini.get("general", "mousesmoothing", Boolean.class);
-
-            if (mouseSmooth) {
-                try {
-                    setVariableInput(8, "bEnableMouseSmoothing=false");
-                } catch (IOException ex) {
-                    
-                }
-
-                JOptionPane.showMessageDialog(null, "Mouse Smoothing = Disabled");
-                mouseSmooth = false;
-            } else {
-                try {
-                    setVariableInput(8, "bEnableMouseSmoothing=true");
-                } catch (IOException ex) {
-                    
-                }
-
-                JOptionPane.showMessageDialog(null, "Mouse Smoothing = Enabled");
-                mouseSmooth = true;
-            }
-
-            Main.iReadini.put("general", "mousesmoothing", mouseSmooth);
-            try {
-                Main.iReadini.store( new FileOutputStream(sWorkingPath + "/" + sIniFileName));
-            } catch (IOException ex) {
-
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Game exe currently not set or file is not set to read/write");
-        }
-    }//GEN-LAST:event_btn_mouseSmoothActionPerformed
-
-    private void btn_vertMouseFixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_vertMouseFixActionPerformed
-        iReadini = new Ini();
-        try {
-            iReadini.load(new FileReader(sWorkingPath + "/" + sIniFileName));
-        } catch (IOException ex) {
-            
-        }
-        
-        Boolean pathSetState = iReadini.get("general", "pathset", Boolean.class);
-        String pathLocation = iReadini.get("general", "path", String.class);
-        
-        String baseInputLoc = pathLocation.substring(0, pathLocation.length() - 24);
-        baseInputLoc = baseInputLoc + "Engine\\Config\\BaseInput.ini";
-        
-        if (pathSetState) {
-            lookupFix = iReadini.get("general", "lookupscalefix", Boolean.class);
-
-            if (!lookupFix) {
-                try {
-                    setVariableInput(5, "LookUpScale=-300");
-                } catch (IOException ex) {
-                    
-                }
-
-                JOptionPane.showMessageDialog(null, "Mouse vertical movement fix = Enabled");
-                lookupFix = true;
-            } else {
-                try {
-                    setVariableInput(5, "LookUpScale=-250");
-                } catch (IOException ex) {
-                    
-                }
-
-                JOptionPane.showMessageDialog(null, "Mouse vertical movement fix = Disabled");
-                lookupFix = false;
-            }
-
-            Main.iReadini.put("general", "lookupscalefix", lookupFix);
-            try {
-                Main.iReadini.store( new FileOutputStream(sWorkingPath + "/" + sIniFileName));
-            } catch (IOException ex) {
-
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Game exe currently not set or file is not set to read/write");
-        }
-    }//GEN-LAST:event_btn_vertMouseFixActionPerformed
 
     public static void setVariableEngine(int lineNumber, String data) throws IOException {
         iReadini = new Ini();
@@ -922,8 +1096,6 @@ public class Main extends javax.swing.JFrame {
         } catch (IOException ex) {
             
         }
-        
-        Boolean pathSetState = iReadini.get("general", "pathset", Boolean.class);
         String pathLocation = iReadini.get("general", "path", String.class);
         
         String baseSystemLoc = pathLocation.substring(0, pathLocation.length() - 24);
@@ -942,8 +1114,6 @@ public class Main extends javax.swing.JFrame {
         } catch (IOException ex) {
             
         }
-        
-        Boolean pathSetState = iReadini.get("general", "pathset", Boolean.class);
         String pathLocation = iReadini.get("general", "path", String.class);
         
         String baseInputLoc = pathLocation.substring(0, pathLocation.length() - 24);
@@ -953,6 +1123,64 @@ public class Main extends javax.swing.JFrame {
         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
         lines.set(lineNumber - 1, data);
         Files.write(path, lines, StandardCharsets.UTF_8);
+    }
+    
+    public static void setVariableDesign(int lineNumber, String data) throws IOException {
+        /*
+        iReadini = new Ini();
+        try {
+            iReadini.load(new FileReader(sWorkingPath + "/" + sIniFileName));
+        } catch (IOException ex) {
+            
+        }
+        String pathLocation = iReadini.get("general", "path", String.class);
+        
+        String baseDesignLoc = pathLocation.substring(0, pathLocation.length() - 24);
+        baseDesignLoc = baseDesignLoc + "BLGame\\Config\\BLDesign.ini";
+
+        byte[] buf = new byte[4096];
+        InputStream fis = newInputStream(java.nio.file.Paths.get(baseDesignLoc));
+
+        UniversalDetector detector = new UniversalDetector();
+        int nread;
+        while ((nread = fis.read(buf)) > 0 && !detector.isDone()) {
+          detector.handleData(buf, 0, nread);
+        }
+
+        detector.dataEnd();
+
+
+        String encoding = detector.getDetectedCharset();
+        if (encoding != null) {
+            // Debug Statement
+            if (isDebugRunning) {
+                System.out.println("Debug: " + "Detected encoding = " + encoding);
+            }
+        } else {
+            // Debug Statement
+            if (isDebugRunning) {
+                System.out.println("Debug: " + "No encoding detected.");
+            }
+        }
+
+        detector.reset();
+        
+        if (encoding.contains("EUC-KR")) {
+            File file = new File(baseDesignLoc);
+            String content = FileUtils.readFileToString(file, "EUC-KR");
+            FileUtils.write(file, content, "UTF-8");
+            
+            // Debug Statement
+            if (isDebugRunning) {
+                System.out.println("Debug: " + "Encoding of file changed.");
+            }
+        }
+        
+        Path path = Paths.get(baseDesignLoc);
+        List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+        lines.set(lineNumber - 1, data);
+        Files.write(path, lines, StandardCharsets.UTF_8);
+        */
     }
     
     /**
@@ -1029,6 +1257,58 @@ public class Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new Main().setVisible(true);
+            
+            iReadini = new Ini();
+            try {
+                iReadini.load(new FileReader(sWorkingPath + "/" + sIniFileName));
+            } catch (IOException ex) {
+
+            }
+            String fovfix = iReadini.get("general", "fovfix", String.class);
+            String mouseSmoothing = iReadini.get("general", "mousesmoothing", String.class);
+            String lookupScaleFix = iReadini.get("general", "lookupscalefix", String.class);
+            
+            // Debug Statement
+            if (isDebugRunning) {
+                System.out.println("Debug: " + "fovfix load state = " + fovfix);
+            }
+            
+            // Debug Statement
+            if (isDebugRunning) {
+                System.out.println("Debug: " + "mouseSmoothing load state = " + fovfix);
+            }
+            
+            // Debug Statement
+            if (isDebugRunning) {
+                System.out.println("Debug: " + "lookupScaleFix load state = " + fovfix);
+            }
+            
+            if (pathSetState) {
+                if (lookupScaleFix.toLowerCase().equals("true")) {
+                    btn_vertMouseFix.setSelected(true);
+                } else {
+                    btn_vertMouseFix.setSelected(false);
+                }
+                
+                if (mouseSmoothing.toLowerCase().equals("false")) {
+                    btn_mouseSmooth.setSelected(false);
+                } else {
+                    btn_mouseSmooth.setSelected(true);
+                }
+                
+                if (fovfix.toLowerCase().equals("true")) {
+                    btn_fov.setSelected(true);
+                } else {
+                    btn_fov.setSelected(false);
+                }
+   
+            } else {
+                // Debug Statement
+                if (isDebugRunning) {
+                    System.out.println("Debug: " + "Can't set button states, Path not set");
+                }
+            }
+            
         });
         
         java.awt.EventQueue.invokeLater(() -> {
@@ -1049,6 +1329,9 @@ public class Main extends javax.swing.JFrame {
                 
                 String baseSystemLoc = pathLocation.substring(0, pathLocation.length() - 24);
                 baseSystemLoc = baseSystemLoc + "Engine\\Config\\BaseSystemSettings.ini";
+                
+                String baseDesignLoc = pathLocation.substring(0, pathLocation.length() - 24);
+                baseDesignLoc = baseDesignLoc + "BLGame\\Config\\BLDesign.ini";
 
                 // Debug Statement
                 if (isDebugRunning) {
@@ -1211,6 +1494,75 @@ public class Main extends javax.swing.JFrame {
                     System.out.println("Debug: " + "StaticDecals = " + sStaticDecals);
                 }
                 fld_staticDecalsBase.setText(sStaticDecals);
+                
+                // AllowPerFrameSleep
+                String sAllowFrameSleep = iBaseSystem.get("SystemSettings", "AllowPerFrameSleep", String.class);
+                // Debug Statement
+                if (isDebugRunning) {
+                    System.out.println("Debug: " + "AllowPerFrameSleep = " + sAllowFrameSleep);
+                }
+                fld_allowFrameSleep.setText(sAllowFrameSleep);
+                
+                // AllowPerFrameYield
+                String sAllowFrameYield = iBaseSystem.get("SystemSettings", "AllowPerFrameYield", String.class);
+                // Debug Statement
+                if (isDebugRunning) {
+                    System.out.println("Debug: " + "AllowPerFrameYield = " + sAllowFrameYield);
+                }
+                fld_allowFrameYield.setText(sAllowFrameYield);
+                
+                iBaseDesign = new Wini();
+                Config designConfig = new Config();
+                sysConfig.setMultiOption(true);
+                sysConfig.setMultiSection(true);
+                iBaseDesign.setConfig(designConfig);
+                try {
+                    iBaseSystem = new Wini(new File(baseDesignLoc));
+                } catch (FileNotFoundException ex) {
+                    // Debug Statement
+                    if (isDebugRunning) {
+                        System.out.println("Debug: " + "iBaseDesign ini not found");
+                    }
+                } catch (InvalidFileFormatException ex) {
+                    // Debug Statement
+                    if (isDebugRunning) {
+                        System.out.println("Debug: " + "iBaseDesign Not Correct Format");
+                    }
+                } catch (IOException ex) {
+                    if (isDebugRunning) {
+                        System.out.println("Debug: " + "General Error");
+                    }
+                }
+                // NormalFov
+                String sNormalFov = iBaseSystem.get("BLGame.BLCamera", "NormalFOV", String.class);
+                // Debug Statement
+                if (isDebugRunning) {
+                    System.out.println("Debug: " + "NormalFov = " + sNormalFov);
+                }
+                
+                sNormalFov = sNormalFov.replaceAll("[^0-9]","");
+                fld_normalFOV.setText(sNormalFov);
+                
+                // SprintFov
+                String sSprintFov = iBaseSystem.get("BLGame.BLCamera", "SprintFOV", String.class);
+                // Debug Statement
+                if (isDebugRunning) {
+                    System.out.println("Debug: " + "SprintFov = " + sSprintFov);
+                }
+                
+                sSprintFov = sSprintFov.replaceAll("[^0-9]","");
+                fld_sprintFOV.setText(sSprintFov);
+                
+                // Mount_MoveFov
+                String sMountFov = iBaseSystem.get("BLGame.BLCamera", "Mount_MoveFOV", String.class);
+                // Debug Statement
+                if (isDebugRunning) {
+                    System.out.println("Debug: " + "Mount_MoveFov = " + sMountFov);
+                }
+                
+                sMountFov = sMountFov.replaceAll("[^0-9]","");
+                fld_mountFOV.setText(sMountFov);
+                
             }
 
         });
@@ -1219,14 +1571,16 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel body_background;
     private javax.swing.JButton btn_close;
-    private javax.swing.JButton btn_fov;
+    private static javax.swing.JCheckBox btn_fov;
     private javax.swing.JButton btn_minimize;
-    private javax.swing.JButton btn_mouseSmooth;
+    private static javax.swing.JCheckBox btn_mouseSmooth;
     private javax.swing.JButton btn_restore;
     private javax.swing.JButton btn_save;
     private javax.swing.JButton btn_set;
-    private javax.swing.JButton btn_vertMouseFix;
+    private static javax.swing.JCheckBox btn_vertMouseFix;
     private static javax.swing.JTextField directoryAnchor;
+    private static javax.swing.JTextField fld_allowFrameSleep;
+    private static javax.swing.JTextField fld_allowFrameYield;
     private static javax.swing.JTextField fld_disablePhysX;
     private static javax.swing.JTextField fld_distortion;
     private static javax.swing.JTextField fld_dynamicDecals;
@@ -1237,14 +1591,21 @@ public class Main extends javax.swing.JFrame {
     private static javax.swing.JTextField fld_memoryMargin;
     private static javax.swing.JTextField fld_minSmoothedFrame;
     private static javax.swing.JTextField fld_motionBlur;
+    private static javax.swing.JTextField fld_mountFOV;
+    private static javax.swing.JTextField fld_normalFOV;
     private static javax.swing.JTextField fld_poolSize;
+    private static javax.swing.JTextField fld_sprintFOV;
     private static javax.swing.JTextField fld_staticDecals;
     private static javax.swing.JTextField fld_staticDecalsBase;
     private static javax.swing.JTextField fld_threadedShader;
     private javax.swing.JLabel headerText;
+    private javax.swing.JLabel title_fov;
     private javax.swing.JLabel title_frameRate;
     private javax.swing.JLabel title_general;
+    private javax.swing.JLabel title_inputMisc;
     private javax.swing.JLabel title_optional;
+    private javax.swing.JLabel txt_allowFrameSleep;
+    private javax.swing.JLabel txt_allowFrameYield;
     private javax.swing.JLabel txt_disablePhysX;
     private javax.swing.JLabel txt_distortion;
     private javax.swing.JLabel txt_dynamicDecals;
@@ -1255,12 +1616,16 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel txt_memoryMargin;
     private javax.swing.JLabel txt_minSmoothedFrame;
     private javax.swing.JLabel txt_motionBlur;
+    private javax.swing.JLabel txt_mountFOV;
+    private javax.swing.JLabel txt_normalFOV;
     private javax.swing.JLabel txt_notice0;
     private javax.swing.JLabel txt_notice1;
-    private javax.swing.JLabel txt_or;
+    private javax.swing.JLabel txt_notice2;
     private javax.swing.JLabel txt_poolSize;
+    private javax.swing.JLabel txt_sprintFOV;
     private javax.swing.JLabel txt_staticDecals;
     private javax.swing.JLabel txt_staticDecalsBase;
     private javax.swing.JLabel txt_threadedShader;
+    private javax.swing.JLabel txt_version;
     // End of variables declaration//GEN-END:variables
 }
