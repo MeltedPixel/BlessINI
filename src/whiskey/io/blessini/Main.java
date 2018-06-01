@@ -363,7 +363,7 @@ public class Main extends javax.swing.JFrame {
             txt_normalFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_normalFOV.setForeground(new java.awt.Color(255, 255, 255));
             txt_normalFOV.setText("NormalFov =");
-            txt_normalFOV.setToolTipText("Recommended = 256");
+            txt_normalFOV.setToolTipText("Recommended = 60");
             getContentPane().add(txt_normalFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, -1));
 
             fld_normalFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -373,7 +373,7 @@ public class Main extends javax.swing.JFrame {
             txt_sprintFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_sprintFOV.setForeground(new java.awt.Color(255, 255, 255));
             txt_sprintFOV.setText("SprintFov =");
-            txt_sprintFOV.setToolTipText("Recommended = 256");
+            txt_sprintFOV.setToolTipText("Recommended = 80");
             getContentPane().add(txt_sprintFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, -1, -1));
 
             fld_sprintFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -383,7 +383,7 @@ public class Main extends javax.swing.JFrame {
             txt_mountFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_mountFOV.setForeground(new java.awt.Color(255, 255, 255));
             txt_mountFOV.setText("Mount_MoveFov =");
-            txt_mountFOV.setToolTipText("Recommended = 256");
+            txt_mountFOV.setToolTipText("Recommended = 85");
             getContentPane().add(txt_mountFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, -1, -1));
 
             fld_mountFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N

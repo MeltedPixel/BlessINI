@@ -697,7 +697,7 @@
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="NormalFov ="/>
-        <Property name="toolTipText" type="java.lang.String" value="Recommended = 256"/>
+        <Property name="toolTipText" type="java.lang.String" value="Recommended = 60"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -730,7 +730,7 @@
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="SprintFov ="/>
-        <Property name="toolTipText" type="java.lang.String" value="Recommended = 256"/>
+        <Property name="toolTipText" type="java.lang.String" value="Recommended = 80"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -763,7 +763,7 @@
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Mount_MoveFov ="/>
-        <Property name="toolTipText" type="java.lang.String" value="Recommended = 256"/>
+        <Property name="toolTipText" type="java.lang.String" value="Recommended = 85"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
