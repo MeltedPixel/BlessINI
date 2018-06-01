@@ -18,9 +18,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
@@ -98,11 +100,8 @@ public class Main extends javax.swing.JFrame {
         txt_disablePhysX = new javax.swing.JLabel();
         fld_disablePhysX = new javax.swing.JTextField();
         txt_poolSize = new javax.swing.JLabel();
-        fld_poolSize = new javax.swing.JTextField();
         txt_memoryMargin = new javax.swing.JLabel();
-        fld_memoryMargin = new javax.swing.JTextField();
         txt_threadedShader = new javax.swing.JLabel();
-        fld_threadedShader = new javax.swing.JTextField();
         title_optional = new javax.swing.JLabel();
         txt_motionBlur = new javax.swing.JLabel();
         fld_motionBlur = new javax.swing.JTextField();
@@ -125,13 +124,15 @@ public class Main extends javax.swing.JFrame {
         fld_sprintFOV = new javax.swing.JTextField();
         txt_mountFOV = new javax.swing.JLabel();
         fld_mountFOV = new javax.swing.JTextField();
-        title_inputMisc = new javax.swing.JLabel();
         btn_fov = new javax.swing.JCheckBox();
         btn_vertMouseFix = new javax.swing.JCheckBox();
         btn_mouseSmooth = new javax.swing.JCheckBox();
         btn_restore = new javax.swing.JButton();
         btn_save = new javax.swing.JButton();
         txt_version = new javax.swing.JLabel();
+        sld_poolSlider = new javax.swing.JSlider();
+        sld_memMargin = new javax.swing.JSlider();
+        sld_threadShade = new javax.swing.JSlider();
         body_background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -263,33 +264,21 @@ public class Main extends javax.swing.JFrame {
 
             txt_poolSize.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_poolSize.setForeground(new java.awt.Color(255, 255, 255));
-            txt_poolSize.setText("PoolSize =");
-            txt_poolSize.setToolTipText("Based on your GPU Memory: 512, 1024, 2048, 4096 (Don't go higher then 4gb)");
+            txt_poolSize.setText("PoolSize:");
+            txt_poolSize.setToolTipText("Based on your GPU Memory: 512, 1024, 2048, 4096 (Don't go higher than 4gb)");
             getContentPane().add(txt_poolSize, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 210, -1, -1));
-
-            fld_poolSize.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-            fld_poolSize.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_poolSize, new org.netbeans.lib.awtextra.AbsoluteConstraints(354, 208, 60, -1));
 
             txt_memoryMargin.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_memoryMargin.setForeground(new java.awt.Color(255, 255, 255));
-            txt_memoryMargin.setText("MemoryMargin =");
-            txt_memoryMargin.setToolTipText("Recommended = 256");
-            getContentPane().add(txt_memoryMargin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 240, -1, -1));
-
-            fld_memoryMargin.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-            fld_memoryMargin.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_memoryMargin, new org.netbeans.lib.awtextra.AbsoluteConstraints(384, 238, 60, -1));
+            txt_memoryMargin.setText("MemoryMargin:");
+            txt_memoryMargin.setToolTipText("Equals your GPU memory in MB / 4, if it exceeds 512MB than set to 512 - Recommended = 256");
+            getContentPane().add(txt_memoryMargin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 280, -1, -1));
 
             txt_threadedShader.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_threadedShader.setForeground(new java.awt.Color(255, 255, 255));
             txt_threadedShader.setText("ThreadedShaderCompileThreshold =");
             txt_threadedShader.setToolTipText("Based on the number of physical CPU cores, not threads your computer has");
-            getContentPane().add(txt_threadedShader, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 270, -1, -1));
-
-            fld_threadedShader.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-            fld_threadedShader.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_threadedShader, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 268, 60, -1));
+            getContentPane().add(txt_threadedShader, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 340, -1, -1));
 
             title_optional.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
             title_optional.setForeground(new java.awt.Color(255, 255, 255));
@@ -368,44 +357,38 @@ public class Main extends javax.swing.JFrame {
 
             title_fov.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
             title_fov.setForeground(new java.awt.Color(255, 255, 255));
-            title_fov.setText("FOV Settings ----------------------------------------------------------------------------");
-            getContentPane().add(title_fov, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 340, 500, 20));
+            title_fov.setText("FOV Settings");
+            getContentPane().add(title_fov, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 90, 20));
 
             txt_normalFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_normalFOV.setForeground(new java.awt.Color(255, 255, 255));
             txt_normalFOV.setText("NormalFov =");
             txt_normalFOV.setToolTipText("Recommended = 256");
-            getContentPane().add(txt_normalFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 370, -1, -1));
+            getContentPane().add(txt_normalFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, -1));
 
             fld_normalFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_normalFOV.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_normalFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(296, 368, 60, -1));
+            getContentPane().add(fld_normalFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(96, 248, 60, -1));
 
             txt_sprintFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_sprintFOV.setForeground(new java.awt.Color(255, 255, 255));
             txt_sprintFOV.setText("SprintFov =");
             txt_sprintFOV.setToolTipText("Recommended = 256");
-            getContentPane().add(txt_sprintFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 370, -1, -1));
-            txt_sprintFOV.getAccessibleContext().setAccessibleName("SprintFov =");
+            getContentPane().add(txt_sprintFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, -1, -1));
 
             fld_sprintFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_sprintFOV.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_sprintFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(448, 368, 60, -1));
+            getContentPane().add(fld_sprintFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 278, 60, -1));
 
             txt_mountFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             txt_mountFOV.setForeground(new java.awt.Color(255, 255, 255));
             txt_mountFOV.setText("Mount_MoveFov =");
             txt_mountFOV.setToolTipText("Recommended = 256");
-            getContentPane().add(txt_mountFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 370, -1, -1));
+            getContentPane().add(txt_mountFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, -1, -1));
 
             fld_mountFOV.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
             fld_mountFOV.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-            getContentPane().add(fld_mountFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(634, 368, 60, -1));
-
-            title_inputMisc.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
-            title_inputMisc.setForeground(new java.awt.Color(255, 255, 255));
-            title_inputMisc.setText("Input / Misc Fix's");
-            getContentPane().add(title_inputMisc, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, 110, 20));
+            getContentPane().add(fld_mountFOV, new org.netbeans.lib.awtextra.AbsoluteConstraints(122, 308, 60, -1));
 
             btn_fov.setText("  FOV & Ultrawide Fix");
             btn_fov.setToolTipText("Fixes FOV and Ultrawide Fix");
@@ -414,7 +397,7 @@ public class Main extends javax.swing.JFrame {
                     btn_fovActionPerformed(evt);
                 }
             });
-            getContentPane().add(btn_fov, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 130, -1));
+            getContentPane().add(btn_fov, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 420, 130, -1));
 
             btn_vertMouseFix.setText("  Vertical Mouse Fix");
             btn_vertMouseFix.setToolTipText("Fixes vertical mouse not matching with horizontal constraints");
@@ -423,7 +406,7 @@ public class Main extends javax.swing.JFrame {
                     btn_vertMouseFixActionPerformed(evt);
                 }
             });
-            getContentPane().add(btn_vertMouseFix, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 130, -1));
+            getContentPane().add(btn_vertMouseFix, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 420, 130, -1));
 
             btn_mouseSmooth.setText("  Mouse Smoothing");
             btn_mouseSmooth.setToolTipText("Turn on/off Mouse Smoothing");
@@ -432,7 +415,7 @@ public class Main extends javax.swing.JFrame {
                     btn_mouseSmoothActionPerformed(evt);
                 }
             });
-            getContentPane().add(btn_mouseSmooth, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, 130, -1));
+            getContentPane().add(btn_mouseSmooth, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 420, 130, -1));
 
             btn_restore.setText("Restore Defaults");
             btn_restore.addActionListener(new java.awt.event.ActionListener() {
@@ -440,7 +423,7 @@ public class Main extends javax.swing.JFrame {
                     btn_restoreActionPerformed(evt);
                 }
             });
-            getContentPane().add(btn_restore, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 420, -1, -1));
+            getContentPane().add(btn_restore, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 370, -1, -1));
 
             btn_save.setText("Save Settings");
             btn_save.addActionListener(new java.awt.event.ActionListener() {
@@ -448,12 +431,34 @@ public class Main extends javax.swing.JFrame {
                     btn_saveActionPerformed(evt);
                 }
             });
-            getContentPane().add(btn_save, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 420, 110, -1));
+            getContentPane().add(btn_save, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 370, 110, -1));
 
             txt_version.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
             txt_version.setForeground(new java.awt.Color(255, 255, 255));
-            txt_version.setText("Ver. 1.1.0");
-            getContentPane().add(txt_version, new org.netbeans.lib.awtextra.AbsoluteConstraints(836, 388, -1, -1));
+            txt_version.setText("Ver. 1.2.0");
+            getContentPane().add(txt_version, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 60, -1, -1));
+
+            sld_poolSlider.setForeground(new java.awt.Color(255, 255, 255));
+            sld_poolSlider.setMajorTickSpacing(25);
+            sld_poolSlider.setPaintTicks(true);
+            sld_poolSlider.setSnapToTicks(true);
+            sld_poolSlider.setToolTipText("");
+            sld_poolSlider.setOpaque(false);
+            getContentPane().add(sld_poolSlider, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 222, 250, -1));
+
+            sld_memMargin.setMajorTickSpacing(50);
+            sld_memMargin.setPaintTicks(true);
+            sld_memMargin.setSnapToTicks(true);
+            sld_memMargin.setValue(0);
+            sld_memMargin.setOpaque(false);
+            getContentPane().add(sld_memMargin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 292, 250, -1));
+
+            sld_threadShade.setMajorTickSpacing(9);
+            sld_threadShade.setPaintTicks(true);
+            sld_threadShade.setSnapToTicks(true);
+            sld_threadShade.setValue(0);
+            sld_threadShade.setOpaque(false);
+            getContentPane().add(sld_threadShade, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 352, 250, -1));
 
             body_background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/whiskey/io/blessini/images/background.png"))); // NOI18N
             getContentPane().add(body_background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 500));
@@ -631,7 +636,32 @@ public class Main extends javax.swing.JFrame {
                 if (isDebugRunning) {
                     System.out.println("Debug: " + "PoolSize = " + poolSize);
                 }
-                fld_poolSize.setText(String.valueOf(poolSize));
+                
+                switch (poolSize) {
+                    case 512:
+                        sld_poolSlider.setValue(0);
+                        break;
+                    
+                    case 1024:
+                        sld_poolSlider.setValue(25);
+                        break;
+                        
+                    case 2048:
+                        sld_poolSlider.setValue(50);
+                        break;
+                        
+                    case 3072:
+                        sld_poolSlider.setValue(75);
+                        break;
+                        
+                    case 4096:
+                        sld_poolSlider.setValue(100);
+                        break;
+                        
+                    default:
+                        sld_poolSlider.setValue(0);
+                        break;
+                }
 
                 // memoryMargin
                 int memoryMargin = iBaseEngine.get("TextureStreaming", "MemoryMargin", int.class);
@@ -639,7 +669,24 @@ public class Main extends javax.swing.JFrame {
                 if (isDebugRunning) {
                     System.out.println("Debug: " + "MemoryMargin = " + memoryMargin);
                 }
-                fld_memoryMargin.setText(String.valueOf(memoryMargin));
+
+                switch (memoryMargin) {
+                    case 128:
+                        sld_memMargin.setValue(0);
+                        break;
+                    
+                    case 256:
+                        sld_memMargin.setValue(25);
+                        break;
+                        
+                    case 512:
+                        sld_memMargin.setValue(50);
+                        break;
+
+                    default:
+                        sld_memMargin.setValue(0);
+                        break;
+                }
 
                 // ThreadedShaderCompileThreshold
                 int threadedShade = iBaseEngine.get("DevOptions.Shaders", "ThreadedShaderCompileThreshold", int.class);
@@ -647,7 +694,60 @@ public class Main extends javax.swing.JFrame {
                 if (isDebugRunning) {
                     System.out.println("Debug: " + "ThreadedShaderCompileThreshold = " + threadedShade);
                 }
-                fld_threadedShader.setText(String.valueOf(threadedShade));
+
+                switch (threadedShade) {
+                    case 1:
+                        sld_threadShade.setValue(0);
+                        break;
+                    
+                    case 2:
+                        sld_threadShade.setValue(9);
+                        break;
+                        
+                    case 3:
+                        sld_threadShade.setValue(18);
+                        break;
+                        
+                    case 4:
+                        sld_threadShade.setValue(27);
+                        break;
+                        
+                    case 5:
+                        sld_threadShade.setValue(36);
+                        break;
+                        
+                    case 6:
+                        sld_threadShade.setValue(45);
+                        break;
+                        
+                    case 7:
+                        sld_threadShade.setValue(54);
+                        break;
+                        
+                    case 8:
+                        sld_threadShade.setValue(63);
+                        break;
+                        
+                    case 9:
+                        sld_threadShade.setValue(72);
+                        break;
+                        
+                    case 10:
+                        sld_threadShade.setValue(81);
+                        break;
+                        
+                    case 11:
+                        sld_threadShade.setValue(90);
+                        break;
+                        
+                    case 12:
+                        sld_threadShade.setValue(100);
+                        break;
+
+                    default:
+                        sld_threadShade.setValue(0);
+                        break;  
+                }
                 
                 iBaseSystem = new Wini();
                 Config sysConfig = new Config();
@@ -831,14 +931,114 @@ public class Main extends javax.swing.JFrame {
                 setVariableEngine(193, "bDisablePhysXHardwareSupport=" + fld_disablePhysX.getText());
                 
                 // PoolSize
-                setVariableEngine(471, "PoolSize=" + fld_poolSize.getText());
-                
+                int iPoolSize = sld_poolSlider.getValue();
+                switch (iPoolSize) {
+                    case 0:
+                        setVariableEngine(471, "PoolSize=512");
+                        break;
+                    
+                    case 25:
+                        setVariableEngine(471, "PoolSize=1024");
+                        break;
+                        
+                    case 50:
+                        setVariableEngine(471, "PoolSize=2048");
+                        break;
+                        
+                    case 75:
+                        setVariableEngine(471, "PoolSize=3072");
+                        break;
+                        
+                    case 100:
+                        setVariableEngine(471, "PoolSize=4096");
+                        break;
+                        
+                    default:
+                        setVariableEngine(471, "PoolSize=512");
+                        break;
+                }
+
                 // MemoryMargin
-                setVariableEngine(472, "MemoryMargin=" + fld_memoryMargin.getText());
+                int iMemoryMargin = sld_memMargin.getValue();
+                switch (iMemoryMargin) {
+                    case 0:
+                        setVariableEngine(472, "MemoryMargin=128");
+                        break;
+                    
+                    case 50:
+                        setVariableEngine(472, "MemoryMargin=256");
+                        break;
+                        
+                    case 100:
+                        setVariableEngine(472, "MemoryMargin=512");
+                        break;
+
+                    default:
+                        setVariableEngine(472, "MemoryMargin=128");
+                        break;
+                }
                 
                 // ThreadedShaderCompileThreshold
-                setVariableEngine(586, "ThreadedShaderCompileThreshold=" + fld_threadedShader.getText());
-                
+                int iThreadShade = sld_threadShade.getValue();
+                switch (iThreadShade) {
+                    case 0:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=1");
+                        break;
+                    
+                    case 9:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=2");
+                        break;
+                        
+                    case 18:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=3");
+                        break;
+                        
+                    case 27:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=4");
+                        break;
+                        
+                    case 36:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=5");
+                        break;
+                        
+                    case 45:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=6");
+                        break;
+                        
+                    case 54:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=7");
+                        break;
+                        
+                    case 63:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=8");
+                        break;
+                        
+                    case 72:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=9");
+                        break;
+                        
+                    case 81:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=10");
+                        break;
+                        
+                    case 90:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=11");
+                        break;
+                        
+                    case 99:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=12");
+                        break;
+                    
+                    case 100:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=12");
+                        break;
+
+                    default:
+                        setVariableEngine(586, "ThreadedShaderCompileThreshold=1");
+                        break;
+                        
+                }
+
                 // MotionBlur
                 setVariableSystem(13, "MotionBlur=" + fld_motionBlur.getText());
                 setVariableSystem(317, "MotionBlur=" + fld_motionBlur.getText());
@@ -901,11 +1101,8 @@ public class Main extends javax.swing.JFrame {
         fld_dynamicDecals.setText("true");
         fld_frameRate.setText("true");
         fld_maxSmoothedFrame.setText("62");
-        fld_memoryMargin.setText("20");
         fld_minSmoothedFrame.setText("22");
-        fld_poolSize.setText("160");
         fld_staticDecals.setText("true");
-        fld_threadedShader.setText("1");
         fld_motionBlur.setText("true");
         fld_distortion.setText("true");
         fld_lightEnv.setText("True");
@@ -913,6 +1110,12 @@ public class Main extends javax.swing.JFrame {
         fld_staticDecalsBase.setText("true");
         fld_allowFrameSleep.setText("true");
         fld_allowFrameYield.setText("true");
+        fld_normalFOV.setText("60");
+        fld_mountFOV.setText("85");
+        fld_sprintFOV.setText("80");
+        sld_poolSlider.setValue(0);
+        sld_memMargin.setValue(0);
+        sld_threadShade.setValue(0);
     
         JOptionPane.showMessageDialog(null, "Defaults restored, don't forget to save.");
     }//GEN-LAST:event_btn_restoreActionPerformed
@@ -1258,6 +1461,38 @@ public class Main extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             new Main().setVisible(true);
             
+            Hashtable<Integer, JLabel> poolSlider = new Hashtable<Integer, JLabel>();
+            poolSlider.put(0, new JLabel("<html><font color='white'>512mb</font></html>"));
+            poolSlider.put(25, new JLabel("<html><font color='white'>1024mb</font></html>"));
+            poolSlider.put(50, new JLabel("<html><font color='white'>2048mb</font></html>"));
+            poolSlider.put(75, new JLabel("<html><font color='white'>3072mb</font></html>"));
+            poolSlider.put(100, new JLabel("<html><font color='white'>4096mb</font></html>"));
+            sld_poolSlider.setLabelTable(poolSlider);
+            sld_poolSlider.setPaintLabels(true);
+            
+            Hashtable<Integer, JLabel> memMargin = new Hashtable<Integer, JLabel>();
+            memMargin.put(0, new JLabel("<html><font color='white'>128mb</font></html>"));
+            memMargin.put(50, new JLabel("<html><font color='white'>256mb</font></html>"));
+            memMargin.put(100, new JLabel("<html><font color='white'>512mb</font></html>"));
+            sld_memMargin.setLabelTable(memMargin);
+            sld_memMargin.setPaintLabels(true);
+            
+            Hashtable<Integer, JLabel> threadShade = new Hashtable<Integer, JLabel>();
+            threadShade.put(0, new JLabel("<html><font color='white'>1</font></html>"));
+            threadShade.put(9, new JLabel("<html><font color='white'>2</font></html>"));
+            threadShade.put(18, new JLabel("<html><font color='white'>3</font></html>"));
+            threadShade.put(27, new JLabel("<html><font color='white'>4</font></html>"));
+            threadShade.put(36, new JLabel("<html><font color='white'>5</font></html>"));
+            threadShade.put(45, new JLabel("<html><font color='white'>6</font></html>"));
+            threadShade.put(54, new JLabel("<html><font color='white'>7</font></html>"));
+            threadShade.put(63, new JLabel("<html><font color='white'>8</font></html>"));
+            threadShade.put(72, new JLabel("<html><font color='white'>9</font></html>"));
+            threadShade.put(81, new JLabel("<html><font color='white'>10</font></html>"));
+            threadShade.put(90, new JLabel("<html><font color='white'>11</font></html>"));
+            threadShade.put(100, new JLabel("<html><font color='white'>12</font></html>"));
+            sld_threadShade.setLabelTable(threadShade);
+            sld_threadShade.setPaintLabels(true);
+            
             iReadini = new Ini();
             try {
                 iReadini.load(new FileReader(sWorkingPath + "/" + sIniFileName));
@@ -1414,7 +1649,32 @@ public class Main extends javax.swing.JFrame {
                 if (isDebugRunning) {
                     System.out.println("Debug: " + "PoolSize = " + poolSize);
                 }
-                fld_poolSize.setText(String.valueOf(poolSize));
+                
+                switch (poolSize) {
+                    case 512:
+                        sld_poolSlider.setValue(0);
+                        break;
+                    
+                    case 1024:
+                        sld_poolSlider.setValue(25);
+                        break;
+                        
+                    case 2048:
+                        sld_poolSlider.setValue(50);
+                        break;
+                        
+                    case 3072:
+                        sld_poolSlider.setValue(75);
+                        break;
+                        
+                    case 4096:
+                        sld_poolSlider.setValue(100);
+                        break;
+                        
+                    default:
+                        sld_poolSlider.setValue(0);
+                        break;
+                }
 
                 // memoryMargin
                 int memoryMargin = iBaseEngine.get("TextureStreaming", "MemoryMargin", int.class);
@@ -1422,7 +1682,24 @@ public class Main extends javax.swing.JFrame {
                 if (isDebugRunning) {
                     System.out.println("Debug: " + "MemoryMargin = " + memoryMargin);
                 }
-                fld_memoryMargin.setText(String.valueOf(memoryMargin));
+
+                switch (memoryMargin) {
+                    case 128:
+                        sld_memMargin.setValue(0);
+                        break;
+                    
+                    case 256:
+                        sld_memMargin.setValue(50);
+                        break;
+                        
+                    case 512:
+                        sld_memMargin.setValue(100);
+                        break;
+
+                    default:
+                        sld_memMargin.setValue(0);
+                        break;
+                }
 
                 // ThreadedShaderCompileThreshold
                 int threadedShade = iBaseEngine.get("DevOptions.Shaders", "ThreadedShaderCompileThreshold", int.class);
@@ -1430,7 +1707,61 @@ public class Main extends javax.swing.JFrame {
                 if (isDebugRunning) {
                     System.out.println("Debug: " + "ThreadedShaderCompileThreshold = " + threadedShade);
                 }
-                fld_threadedShader.setText(String.valueOf(threadedShade));
+
+                switch (threadedShade) {
+                    case 1:
+                        sld_threadShade.setValue(0);
+                        break;
+                    
+                    case 2:
+                        sld_threadShade.setValue(9);
+                        break;
+                        
+                    case 3:
+                        sld_threadShade.setValue(18);
+                        break;
+                        
+                    case 4:
+                        sld_threadShade.setValue(27);
+                        break;
+                        
+                    case 5:
+                        sld_threadShade.setValue(36);
+                        break;
+                        
+                    case 6:
+                        sld_threadShade.setValue(45);
+                        break;
+                        
+                    case 7:
+                        sld_threadShade.setValue(54);
+                        break;
+                        
+                    case 8:
+                        sld_threadShade.setValue(63);
+                        break;
+                        
+                    case 9:
+                        sld_threadShade.setValue(72);
+                        break;
+                        
+                    case 10:
+                        sld_threadShade.setValue(81);
+                        break;
+                        
+                    case 11:
+                        sld_threadShade.setValue(90);
+                        break;
+                        
+                    case 12:
+                        sld_threadShade.setValue(100);
+                        break;
+
+                    default:
+                        sld_threadShade.setValue(0);
+                        break;
+                        
+                }
                 
                 iBaseSystem = new Wini();
                 Config sysConfig = new Config();
@@ -1588,21 +1919,20 @@ public class Main extends javax.swing.JFrame {
     private static javax.swing.JTextField fld_frameRate;
     private static javax.swing.JTextField fld_lightEnv;
     private static javax.swing.JTextField fld_maxSmoothedFrame;
-    private static javax.swing.JTextField fld_memoryMargin;
     private static javax.swing.JTextField fld_minSmoothedFrame;
     private static javax.swing.JTextField fld_motionBlur;
     private static javax.swing.JTextField fld_mountFOV;
     private static javax.swing.JTextField fld_normalFOV;
-    private static javax.swing.JTextField fld_poolSize;
     private static javax.swing.JTextField fld_sprintFOV;
     private static javax.swing.JTextField fld_staticDecals;
     private static javax.swing.JTextField fld_staticDecalsBase;
-    private static javax.swing.JTextField fld_threadedShader;
     private javax.swing.JLabel headerText;
+    private static javax.swing.JSlider sld_memMargin;
+    private static javax.swing.JSlider sld_poolSlider;
+    private static javax.swing.JSlider sld_threadShade;
     private javax.swing.JLabel title_fov;
     private javax.swing.JLabel title_frameRate;
     private javax.swing.JLabel title_general;
-    private javax.swing.JLabel title_inputMisc;
     private javax.swing.JLabel title_optional;
     private javax.swing.JLabel txt_allowFrameSleep;
     private javax.swing.JLabel txt_allowFrameYield;
