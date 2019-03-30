@@ -1,7 +1,7 @@
 # BlessINI
 Bless Online INI Settings Editor
 
-Author: Reign
+Author: Whiskeysim
 
 Compiled: 5/30/2018
 
